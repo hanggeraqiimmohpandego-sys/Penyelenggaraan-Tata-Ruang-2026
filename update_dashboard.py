@@ -2,23 +2,22 @@ import pandas as pd
 import plotly.express as px
 import os
 
-# 1. Alamat file data
-file_path = 'data_ruang.csv'
+# 1. Nama file Excel asli Anda
+file_excel = 'rekap_tataruang.xlsx'
 
-# 2. Cek apakah file data ada, jika tidak buat data cadangan agar tidak error
-if os.path.exists(file_path):
-    df = pd.read_csv(file_path)
+# 2. Cek apakah file ada
+if os.path.exists(file_excel):
+    # Membaca file excel
+    df = pd.read_excel(file_excel)
+    
+    # 3. Buat Visualisasi (Sesuaikan nama kolom dengan di Excel Anda)
+    # Contoh: Menghitung jumlah layanan per status
+    # Ganti 'Status' dengan nama kolom status di Excel Anda
+    fig = px.pie(df, names='Status', title='Distribusi Status Layanan Tata Ruang 2026',
+                 hole=0.4, color_discrete_sequence=px.colors.sequential.RdBu)
+    
+    # 4. Simpan ke HTML
+    fig.write_html('index.html')
+    print("Dashboard dari data Excel berhasil diperbarui!")
 else:
-    df = pd.DataFrame({
-        'tanggal': ['2026-04-20'],
-        'status': ['Proses'],
-        'jumlah': [10]
-    })
-
-# 3. Buat grafik batang sederhana
-fig = px.bar(df, x='tanggal', y='jumlah', color='status', 
-             title='Monitoring Penyelenggaraan Tata Ruang 2026')
-
-# 4. Simpan hasilnya menjadi index.html (ini yang akan tampil di link)
-fig.write_html('index.html')
-print("Dashboard Berhasil Dibuat!")
+    print(f"File {file_excel} tidak ditemukan. Silakan upload file tersebut.")
