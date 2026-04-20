@@ -1,0 +1,32 @@
+name: Dashboard-Otomatis
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *' # Berjalan otomatis setiap jam 12 malam
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Library
+        run: pip install pandas plotly
+
+      - name: Jalankan Skrip Update
+        run: python update_dashboard.py
+
+      - name: Simpan Data Baru
+        run: |
+          git config --global user.name "Auto-Bot"
+          git config --global user.email "bot@github.com"
+          git add .
+          git commit -m "Update dashboard otomatis: $(date)" || exit 0
+          git push
