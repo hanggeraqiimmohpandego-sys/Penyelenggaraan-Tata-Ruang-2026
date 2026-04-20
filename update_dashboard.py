@@ -2,22 +2,26 @@ import pandas as pd
 import plotly.express as px
 import os
 
-# 1. Nama file Excel asli Anda
-file_excel = 'rekap_tataruang.xlsx'
+# 1. Nama file sesuai data asli Anda
+file_excel = 'Rekap Layanan ITR_Laporan.xlsx'
 
-# 2. Cek apakah file ada
 if os.path.exists(file_excel):
-    # Membaca file excel
+    # Membaca data dari Excel
     df = pd.read_excel(file_excel)
     
-    # 3. Buat Visualisasi (Sesuaikan nama kolom dengan di Excel Anda)
-    # Contoh: Menghitung jumlah layanan per status
-    # Ganti 'Status' dengan nama kolom status di Excel Anda
-    fig = px.pie(df, names='Status', title='Distribusi Status Layanan Tata Ruang 2026',
-                 hole=0.4, color_discrete_sequence=px.colors.sequential.RdBu)
+    # Membersihkan nama kolom (menghapus spasi di awal/akhir)
+    df.columns = df.columns.str.strip()
+
+    # 2. Membuat Grafik (Asumsi kolom 'Status' atau 'Keterangan' ada di file Anda)
+    # Jika nama kolomnya berbeda, silakan ganti 'Status' di bawah ini
+    kolom_status = 'Status' if 'Status' in df.columns else df.columns[0]
     
-    # 4. Simpan ke HTML
+    fig = px.pie(df, names=kolom_status, 
+                 title=f'Progres Layanan ITR 2026 - Data: {file_excel}',
+                 hole=0.4)
+
+    # 3. Simpan ke HTML untuk dashboard
     fig.write_html('index.html')
-    print("Dashboard dari data Excel berhasil diperbarui!")
+    print("Dashboard dari data Excel asli berhasil dibuat!")
 else:
-    print(f"File {file_excel} tidak ditemukan. Silakan upload file tersebut.")
+    print(f"Error: File {file_excel} tidak ditemukan di repositori.")
